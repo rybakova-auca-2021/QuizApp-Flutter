@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/data/questions.dart';
 
 class Questions extends StatefulWidget {
-  const Questions({Key? key}) : super(key: key);
+  const Questions({super.key, required this.onSelectAnswer});
+
+  final void Function(String answer) onSelectAnswer;
 
   @override
   State<Questions> createState() {
@@ -12,7 +14,7 @@ class Questions extends StatefulWidget {
 
 class _QuestionState extends State<Questions> {
   var activeScreen = 'questions-screen';
-   var currentQuestionIndex = 0;
+  var currentQuestionIndex = 0;
 
   void switchScreen() {
     setState(() {
@@ -20,7 +22,8 @@ class _QuestionState extends State<Questions> {
     });
   }
 
-  void answerQuestion() {
+  void answerQuestion(String answer) {
+    widget.onSelectAnswer(answer);
     setState(() {
       currentQuestionIndex = currentQuestionIndex + 1;
     });
@@ -50,7 +53,7 @@ class _QuestionState extends State<Questions> {
           Text(currentQuestion.text, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 30),
           ...currentQuestion.getShuffleAnswers().map((item) {
-            return buildStyledButton(item, () {answerQuestion();});
+            return buildStyledButton(item, () {answerQuestion(item);});
           }),
         ],
       ),
